@@ -14,23 +14,30 @@ class NmiDetails extends Migration
     public function up()
     {
         Schema::create('nmi_details', function (Blueprint $table) {
-            $table->bigIncrements('rid');
-            $table->string('incidenttype');
-            $table->string('category');
+            $table->id();
+            $table->unsignedBigInteger('incident_type');
+            $table->unsignedBigInteger('category');
             $table->string('date');
             $table->string('time');
-            $table->string('location');
+            $table->unsignedBigInteger('location');
             $table->string('incident_description');
             $table->string('nearmiss_description');
-            $table->string('persons_involved');
-            $table->string('root_cause_analysis');
-            $table->string('measures_taken');
-            $table->string('witnesses');
-            $table->string('comments');
-            $table->string('supporting_documents');
+            $table->string('persons_involved')->nullable();
+            $table->string('root_cause_analysis')->nullable();
+            $table->string('measures_taken')->nullable();
+            $table->string('witnesses')->nullable();
+            $table->string('comments')->nullable();
+            $table->string('supporting_documents')->nullable();
             $table->string('status');
-            $table->string('created_by');
+            $table->unsignedBigInteger('created_by');
             $table->timestamps();
+
+
+            $table->foreign('incident_type')->references('id')->on('incident_types');
+            $table->foreign('category')->references('id')->on('category_types');
+            $table->foreign('location')->references('id')->on('location_details');
+            $table->foreign('created_by')->references('id')->on('users');
+
         });
     }
 
@@ -41,6 +48,6 @@ class NmiDetails extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('nmidatabase');
+        Schema::dropIfExists('nmi_details');
     }
 }
